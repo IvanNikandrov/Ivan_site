@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 
 from coolsite import settings
-from mount.views import index, categories, pageNotFound
+from mount.views import  pageNotFound
 from django.urls import include
 
 urlpatterns = [
