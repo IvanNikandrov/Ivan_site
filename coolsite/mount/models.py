@@ -21,7 +21,7 @@ class Mount(models.Model):
     class Meta:
         verbose_name = 'Роскошные горищи'
         verbose_name_plural = 'Роскошные горищи'
-        ordering = ['-time_create', 'title']
+        ordering = ['id']
 
 
 class Category(models.Model):
