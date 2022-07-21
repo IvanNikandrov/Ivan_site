@@ -1,12 +1,12 @@
 from django.contrib.auth import logout, login
 from django.contrib.auth.views import LoginView
-from django.shortcuts import render, HttpResponse, redirect, get_object_or_404
-from django.http import HttpResponseNotFound, Http404
+from django.shortcuts import render, HttpResponse, redirect
+from django.http import HttpResponseNotFound
 from django.urls import reverse_lazy
 
-from .forms import AddPostForm, RegisterUserForm, LoginUserForm
-from .models import *
-from django.views.generic import ListView, DetailView, CreateView
+from .forms import AddPostForm, RegisterUserForm, LoginUserForm, ContactForm
+from .models import Mount, Category
+from django.views.generic import ListView, DetailView, CreateView, FormView
 from .utils import DataMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -15,7 +15,6 @@ class MountHome(DataMixin, ListView):
     model = Mount
     template_name = 'mount/index.html'
     context_object_name = 'posts'
-    allow_empty = False
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -23,25 +22,7 @@ class MountHome(DataMixin, ListView):
         return dict(list(context.items()) + list(c_def.items()))
 
     def get_queryset(self):
-        return Mount.objects.filter(is_published=True)
-
-
-# def index(request):
-#     posts = Mount.objects.all()
-#     context = {
-#         'title': 'Главная страница',
-#         'posts': posts,
-#         'cat_selected': 0,
-#     }
-#
-#     return render(request, 'mount/index.html', context=context)
-#
-# @login_requuired
-def about(request):
-    context = {
-        'title': 'О нас',
-    }
-    return render(request, 'mount/about.html', context=context)
+        return Mount.objects.filter(is_published=True).select_related('cat')
 
 
 class AddPage(LoginRequiredMixin, DataMixin, CreateView):
@@ -58,23 +39,6 @@ class AddPage(LoginRequiredMixin, DataMixin, CreateView):
         return dict(list(context.items()) + list(c_def.items()))
 
 
-# def add_page(request):
-#     if request.method == 'POST':
-#         form = AddPostForm(request.POST, request.FILES)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('home')
-#
-#     else:
-#         form = AddPostForm()
-#
-#     return render(request, 'mount/addpage.html', {'title': "Добавление статьи", 'form': form})
-
-
-def contact(request):
-    return HttpResponse('ФОрма обратной связи')
-
-
 class ShowPost(DataMixin, DetailView):
     model = Mount
     template_name = 'mount/post.html'
@@ -87,16 +51,6 @@ class ShowPost(DataMixin, DetailView):
         return dict(list(context.items()) + list(c_def.items()))
 
 
-# def show_post(request, post_slug):
-# post = get_object_or_404(Mount, slug=post_slug)
-# context = {
-#     'title': post.title,
-#     'post': post,
-#     'cat_selected': post.cat_id,
-# }
-# return render(request, 'mount/post.html', context=context)
-
-
 class MontCategory(DataMixin, ListView):
     model = Mount
     template_name = 'mount/index.html'
@@ -104,30 +58,13 @@ class MontCategory(DataMixin, ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        c_def = self.get_user_context(title='Категория - ' + str(context['posts'][0].cat),
-                                      cat_selected=str(context['posts'][0].cat_id))
+        c = Category.objects.get(slug=self.kwargs['cat_slug'])
+        c_def = self.get_user_context(title='Категория - ' + str(c.name),
+                                      cat_selected=str(c.pk))
         return dict(list(context.items()) + list(c_def.items()))
 
     def get_queryset(self):
         return Mount.objects.filter(cat__slug=self.kwargs['cat_slug'], is_published=True)
-
-
-# def show_category(request, cat_id):
-#     posts = Mount.objects.filter(cat_id=cat_id)
-#     if len(posts) == 0:
-#         raise Http404()
-#
-#     context = {
-#         'title': 'Отображение по рубрикам',
-#         'posts': posts,
-#         'cat_selected': cat_id,
-#     }
-
-# return render(request, 'mount/index.html', context=context)
-
-
-def pageNotFound(request, exception):
-    return HttpResponseNotFound('<h1> Страница не найдена </h1>')
 
 
 class RegisterUser(DataMixin, CreateView):
@@ -158,6 +95,39 @@ class LoginUser(DataMixin, LoginView):
     def get_success_url(self):
         return reverse_lazy('home')
 
+
 def logout_user(request):
     logout(request)
     return redirect('login')
+
+
+def about(request):
+    context = {
+        'title': 'О нас',
+    }
+    return render(request, 'mount/about.html', context=context)
+
+
+class ContactFormView(DataMixin, FormView):
+    form_class = ContactForm
+    template_name = 'mount/contact.html'
+    success_url = reverse_lazy('home')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title='Обратная связь')
+        return dict(list(context.items()) + list(c_def.items()))
+
+    def form_valid(self, form):
+        print((form.cleaned_data))
+        return redirect('home')
+
+
+
+
+def contact(request):
+    return HttpResponse('Форма обратной связи')
+
+
+def page_not_found(request, exception):
+    return HttpResponseNotFound('<h1> Страница не найдена </h1>')

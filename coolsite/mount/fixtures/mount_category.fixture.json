@@ -1,0 +1,26 @@
+[
+  {
+    "model": "mount.category",
+    "pk": 1,
+    "fields": {
+      "name": "Горы до 5000 метров",
+      "slug": "gory-do-5000-metrov"
+    }
+  },
+  {
+    "model": "mount.category",
+    "pk": 2,
+    "fields": {
+      "name": "Горы от 5000 до 8000 метров",
+      "slug": "5000-8000-metrov"
+    }
+  },
+  {
+    "model": "mount.category",
+    "pk": 3,
+    "fields": {
+      "name": "Высочайшие горы мира",
+      "slug": "vysochajshie-gory-mira"
+    }
+  }
+]

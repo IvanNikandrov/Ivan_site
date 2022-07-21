@@ -23,7 +23,8 @@
                         {% if request.user.is_authenticated %}
                             <li class="last">{{ user.username }} | <a href="{% url 'logout' %}">Выйти</a></li>
                         {% else %}
-                            <li class="last"><a href="{% url 'register' %}">Регистрация</a> | <a href="{% url 'login' %}">Войти</a></li>
+                            <li class="last"><a href="{% url 'register' %}">Регистрация</a> | <a
+                                    href="{% url 'login' %}">Войти</a></li>
                         {% endif %}
 
                         {% show_mainmenu %}
@@ -38,6 +39,7 @@
                     <!-- Sidebar слева -->
                     <td valign="top" class="left-chapters">
                         <ul id="leftchapters">
+
                             {% if cat_selected == 0 %}
                                 <li class="selected">Все категории</li>
                             {% else %}
@@ -78,10 +80,10 @@
                             {% endif %}
 
                             {% if page_obj.has_next %}
-                                    <li class="page-num">
-                                        <a href="?page= {{ page_obj.next_page_number }}">&gt;</a>
-                                    </li>
-                                {% endif %}
+                                <li class="page-num">
+                                    <a href="?page= {{ page_obj.next_page_number }}">&gt;</a>
+                                </li>
+                            {% endif %}
                             </nav>
                             </ul>
                         </div>
