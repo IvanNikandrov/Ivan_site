@@ -27,6 +27,8 @@ def show_mainmenu(sort=None):
     menu = [
         {'title': 'О сайте', 'url_name': 'about'},
         {'title': 'Добавить статью', 'url_name': 'add_page'},
-        {'title': 'Обратная связь', 'url_name': 'contact'}
+        {'title': 'Обратная связь', 'url_name': 'contact'},
+        {'title': 'Exchange', 'url_name': 'exchange_main'},
+
     ]
     return {'menu': menu}

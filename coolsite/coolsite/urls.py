@@ -10,6 +10,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('mount.urls')),
     path('captcha/', include('captcha.urls')),
+    path('exchange_app/', include('exchange_app.urls')),
 ]
 
 

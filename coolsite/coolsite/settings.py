@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'mount.apps.MountConfig',
     'captcha',
+    'exchange_app'
 ]
 
 MIDDLEWARE = [
@@ -56,7 +57,7 @@ ROOT_URLCONF = 'coolsite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, '../exchange_app/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

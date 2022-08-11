@@ -356,10 +356,10 @@ ul.lang-list li a:hover {color: #fdc073;}
 #footer {
 	box-sizing: border-box;
 
-	background: #3F4137;
+	background: rebeccapurple;
 	padding: 5px;
-	color: #aaa;
-	font-size: 14px;
+	color: white;
+	font-size: 20px;
 	font-family: Verdana, Geneva, Arial, Helvetica;
 	text-align: left;
 	overflow: hidden;
